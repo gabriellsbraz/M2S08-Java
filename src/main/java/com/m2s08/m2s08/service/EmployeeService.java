@@ -2,8 +2,10 @@ package com.m2s08.m2s08.service;
 
 
 import com.m2s08.m2s08.model.Employee;
+import com.m2s08.m2s08.model.Register;
 import com.m2s08.m2s08.repository.EmployeeRepository;
 import com.m2s08.m2s08.transport.CreateEmployeeDTO;
+import com.m2s08.m2s08.transport.CreateRegisterdDTO;
 import com.m2s08.m2s08.transport.DetailedEmployeeDTO;
 import com.m2s08.m2s08.transport.SoldierEmployeeDTO;
 import jakarta.transaction.Transactional;
@@ -37,5 +39,16 @@ public class EmployeeService {
     public DetailedEmployeeDTO getEmployee(Long id) {
         return this.employeeRepository.findById(id).map(DetailedEmployeeDTO::new)
                 .orElseThrow(()-> new IllegalArgumentException("Employee with id not found: " + id));
+    }
+
+    @Transactional
+    public CreateRegisterdDTO createRegister(Long id, CreateRegisterdDTO body) {
+        Employee employee = this.employeeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Employee with id not found: " + id));
+
+        Register register = new Register(body.type(), employee);
+        employee.getRegisters().add(register);
+
+        return new CreateRegisterdDTO(register);
     }
 }

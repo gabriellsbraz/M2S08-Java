@@ -2,6 +2,7 @@ package com.m2s08.m2s08.controller;
 
 import com.m2s08.m2s08.service.EmployeeService;
 import com.m2s08.m2s08.transport.CreateEmployeeDTO;
+import com.m2s08.m2s08.transport.CreateRegisterdDTO;
 import com.m2s08.m2s08.transport.DetailedEmployeeDTO;
 import com.m2s08.m2s08.transport.SoldierEmployeeDTO;
 import jakarta.validation.Valid;
@@ -41,4 +42,9 @@ public class EmployeeController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/{id}/register")
+    public ResponseEntity<CreateRegisterdDTO> createRegister(@PathVariable("id") Long id, @RequestBody @Valid CreateRegisterdDTO body) {
+        CreateRegisterdDTO response = this.employeeService.createRegister(id, body);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }
