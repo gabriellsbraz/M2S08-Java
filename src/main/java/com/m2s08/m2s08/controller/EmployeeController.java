@@ -4,12 +4,13 @@ import com.m2s08.m2s08.service.EmployeeService;
 import com.m2s08.m2s08.transport.CreateEmployeeDTO;
 import com.m2s08.m2s08.transport.SoldierEmployeeDTO;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/employees")
@@ -25,5 +26,11 @@ public class EmployeeController {
     public ResponseEntity<SoldierEmployeeDTO> create(@RequestBody @Valid CreateEmployeeDTO body){
         SoldierEmployeeDTO response = this.employeeService.create(body);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<SoldierEmployeeDTO>> list(@PageableDefault(size = 12, sort = "name") Pageable pageable) {
+        Page<SoldierEmployeeDTO> response = this.employeeService.listAll(pageable);
+        return ResponseEntity.ok(response);
     }
 }

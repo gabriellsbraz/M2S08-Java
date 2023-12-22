@@ -7,6 +7,11 @@ import com.m2s08.m2s08.transport.CreateEmployeeDTO;
 import com.m2s08.m2s08.transport.SoldierEmployeeDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+
+import java.awt.print.Pageable;
 
 @Service
 public class EmployeeService {
@@ -21,5 +26,9 @@ public class EmployeeService {
     public SoldierEmployeeDTO create(CreateEmployeeDTO body) {
         Employee newEmployee = this.employeeRepository.save(new Employee(body));
         return new SoldierEmployeeDTO(newEmployee);
+    }
+
+    public Page<SoldierEmployeeDTO> listAll(Pageable pageable){
+        return this.employeeRepository.findAll(pageable).map(SoldierEmployeeDTO::new);
     }
 }
