@@ -2,6 +2,7 @@ package com.m2s08.m2s08.controller;
 
 import com.m2s08.m2s08.service.EmployeeService;
 import com.m2s08.m2s08.transport.CreateEmployeeDTO;
+import com.m2s08.m2s08.transport.DetailedEmployeeDTO;
 import com.m2s08.m2s08.transport.SoldierEmployeeDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -33,4 +34,11 @@ public class EmployeeController {
         Page<SoldierEmployeeDTO> response = this.employeeService.listAll(pageable);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DetailedEmployeeDTO> getById(@PathVariable("id") Long id) {
+        DetailedEmployeeDTO response = this.employeeService.getEmployee(id);
+        return ResponseEntity.ok(response);
+    }
+
 }
