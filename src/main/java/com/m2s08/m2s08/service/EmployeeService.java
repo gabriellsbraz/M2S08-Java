@@ -9,15 +9,16 @@ import com.m2s08.m2s08.transport.CreateRegisterdDTO;
 import com.m2s08.m2s08.transport.DetailedEmployeeDTO;
 import com.m2s08.m2s08.transport.SoldierEmployeeDTO;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-
-import java.awt.print.Pageable;
+import org.slf4j.Logger;
 
 @Service
 public class EmployeeService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
     private final EmployeeRepository employeeRepository;
 
@@ -27,22 +28,26 @@ public class EmployeeService {
 
     @Transactional
     public SoldierEmployeeDTO create(CreateEmployeeDTO body) {
+        LOGGER.info("Iniciando o cadastro de um novo funcionário");
         Employee newEmployee = this.employeeRepository.save(new Employee(body));
         return new SoldierEmployeeDTO(newEmployee);
     }
 
-    public Page<SoldierEmployeeDTO> listAll(Pageable pageable){
+    public Page<SoldierEmployeeDTO> listAll(Pageable pageable) {
+        LOGGER.info("Listando todos os registros de funcionários.");
         return this.employeeRepository.findAll(pageable).map(SoldierEmployeeDTO::new);
     }
 
 
     public DetailedEmployeeDTO getEmployee(Long id) {
+        LOGGER.info("Listando registro de funcionário por identificador.");
         return this.employeeRepository.findById(id).map(DetailedEmployeeDTO::new)
-                .orElseThrow(()-> new IllegalArgumentException("Employee with id not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Employee with id not found: " + id));
     }
 
     @Transactional
     public CreateRegisterdDTO createRegister(Long id, CreateRegisterdDTO body) {
+        LOGGER.info("Criando registros de ponto.");
         Employee employee = this.employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Employee with id not found: " + id));
 
